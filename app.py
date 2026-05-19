@@ -86,7 +86,9 @@ UPLOAD_FOLDER = "static/images"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 app.config['SECRET_KEY'] = "your_secret_key_here"
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:Anushka%40123@localhost:3306/skincare"
+
+
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
