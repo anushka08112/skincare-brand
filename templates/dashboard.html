@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- SORT -->
+
+<div class="sort-box">
+
+    <form method="GET" action="/dashboard">
+
+        <select name="sort" onchange="this.form.submit()">
+
+            <option value="">Sort Products</option>
+
+            <option value="low"
+            {% if request.args.get('sort') == 'low' %}
+            selected
+            {% endif %}>
+                Price Low to High
+            </option>
+
+            <option value="high"
+            {% if request.args.get('sort') == 'high' %}
+            selected
+            {% endif %}>
+                Price High to Low
+            </option>
+
+            <option value="new"
+            {% if request.args.get('sort') == 'new' %}
+            selected
+            {% endif %}>
+                Newest First
+            </option>
+
+        </select>
+
+    </form>
+
+</div>
+
+<!-- PRODUCTS -->
+
+<div class="product-container">
+
+    {% for p in products %}
+
+    <div class="product-card">
+
+        <!-- WISHLIST -->
+
+        <div class="wishlist-icon"
+             onclick="toggleWishlist('{{ p.product_id }}', this)">
+             
+            {% if p.product_id in wishlist_ids %}
+                ❤️
+            {% else %}
+                🤍
+            {% endif %}
+
+        </div>
+
+        <!-- CLICKABLE PRODUCT -->
+
+        <a href="{{ url_for('product_detail', id=p.product_id) }}"
+           class="product-link">
+
+            <img
+                src="{{ url_for('static', filename='images/' + p.image_url) }}"
+                alt="{{ p.name }}"
+                class="product-image"
+            >
+
+            <h3>{{ p.name }}</h3>
+
+            <p class="price">
+                ₹{{ p.price }}
+            </p>
+
+            <p class="rating">
+                ⭐ {{ "%.1f"|format(p.avg_rating or 0) }}
+            </p>
+
+        </a>
+
+        <!-- CART BUTTON -->
+
+        {% if p.stock > 0 %}
+
+            <button
+                class="add-to-cart"
+                onclick="addToCart('{{ p.product_id }}', this)">
+                
+                Add to Cart
+
+            </button>
+
+        {% else %}
+
+            <p class="out-stock">
+                Out of Stock
+            </p>
+
+            <button class="out-btn" disabled>
+                Unavailable
+            </button>
+
+        {% endif %}
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+<!-- PAGINATION -->
+
+<div class="pagination">
+
+    {% if page > 1 %}
+
+        <a href="/dashboard?page={{ page - 1 }}
+        &sort={{ request.args.get('sort', '') }}">
+            Previous
+        </a>
+
+    {% endif %}
+
+    <span>
+        Page {{ page }} of {{ total_pages }}
+    </span>
+
+    {% if page < total_pages %}
+
+        <a href="/dashboard?page={{ page + 1 }}
+        &sort={{ request.args.get('sort', '') }}">
+            Next
+        </a>
+
+    {% endif %}
+
+</div>
+
+<!-- JAVASCRIPT -->
+
+<script>
+
+async function addToCart(productId, btn) {
+
+    const response = await fetch("/api/cart/add", {
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            product_id: productId
+        })
+    });
+
+    const data = await response.json();
+
+    if (data.message) {
+
+        btn.innerText = "Added ✓";
+
+        setTimeout(() => {
+            btn.innerText = "Add to Cart";
+        }, 1500);
+
+    } else {
+
+        alert("Please login first");
+
+    }
+}
+
+async function toggleWishlist(productId, el) {
+
+    const response = await fetch("/api/wishlist/toggle", {
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            product_id: productId
+        })
+    });
+
+    const data = await response.json();
+
+    if (data.status == "added") {
+
+        el.innerHTML = "❤️";
+
+    } else if (data.status == "removed") {
+
+        el.innerHTML = "🤍";
+
+    } else {
+
+        alert("Please login first");
+
+    }
+}
+
+</script>
+
+{% endblock %}

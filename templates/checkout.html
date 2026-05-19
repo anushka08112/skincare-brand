@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="checkout-container">
+
+    <h1>Checkout 🧾</h1>
+
+    <!-- 📍 ADDRESS SELECTION -->
+    <h2>Select Address</h2>
+
+    <form action="/place-order" method="POST">
+
+        {% for a in addresses %}
+        <div class="address-box">
+            <input type="radio" name="address_id" value="{{ a[0] }}" required>
+            <p>{{ a[2] }}, {{ a[3] }} - {{ a[4] }}</p>
+        </div>
+        {% endfor %}
+
+        <h3>Add New Address</h3>
+
+        <input name="new_address" placeholder="Full Address">
+        <input name="city" placeholder="City">
+        <input name="pincode" placeholder="Pincode">
+
+        <!-- 🛒 ORDER SUMMARY -->
+        <h2>Order Summary</h2>
+
+        {% for item in cart_items %}
+        <div class="checkout-item">
+            <p>{{ item[0] }} x {{ item[2] }}</p>
+            <span>₹{{ item[1] * item[2] }}</span>
+        </div>
+        {% endfor %}
+        <form action="/checkout" method="GET">
+
+    <input type="text"
+           name="coupon"
+           placeholder="Enter Coupon Code">
+
+    <button type="submit">
+        Apply Coupon
+    </button>
+
+    </form>
+        <p>Discount: ₹{{ discount }}</p>
+
+<h2>Total: ₹{{ total }}</h2>
+
+        <button type="submit" class="btn">Place Order</button>
+
+    </form>
+    <div class="delivery-box">
+    <p><b>Delivery To:</b></p>
+    <p>{{ address[0] }}, {{ address[1] }} - {{ address[2] }}</p>
+</div>
+
+</div>
+
+{% endblock %}

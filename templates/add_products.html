@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="form-container">
+
+    <h2>Add Product</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+
+        <!-- PRODUCT NAME -->
+        <input type="text"
+               name="name"
+               placeholder="Product Name"
+               required>
+
+        <!-- DESCRIPTION -->
+        <textarea name="description"
+                  placeholder="Description"
+                  rows="5"
+                  required></textarea>
+
+        <!-- PRICE -->
+        <input type="number"
+               name="price"
+               placeholder="Price"
+               step="0.01"
+               required>
+
+        <!-- STOCK -->
+        <input type="number"
+               name="stock"
+               placeholder="Stock Quantity"
+               required>
+
+        
+
+        <!-- INGREDIENTS -->
+        <label>Ingredients</label>
+
+        <div class="checkbox-grid">
+
+            {% for ingredient in ingredients %}
+
+                <label>
+
+                    <input type="checkbox"
+                           name="ingredients"
+                           value="{{ ingredient[0] }}">
+
+                    {{ ingredient[1] }}
+
+                </label>
+
+            {% endfor %}
+
+        </div>
+
+        <!-- CONCERNS -->
+        <label>Skin Concerns</label>
+
+        <div class="checkbox-grid">
+
+            {% for concern in concerns %}
+
+                <label>
+
+                    <input type="checkbox"
+                           name="concerns"
+                           value="{{ concern[0] }}">
+
+                    {{ concern[1] }}
+
+                </label>
+
+            {% endfor %}
+
+        </div>
+
+        <!-- IMAGE -->
+        <label>Product Image</label>
+
+        <input type="file"
+               name="image"
+               accept="image/*"
+               required>
+
+        <!-- BUTTON -->
+        <button type="submit">
+
+            Add Product
+
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="product-detail">
+
+    <div class="product-detail-layout">
+
+    <!-- LEFT IMAGE -->
+
+ <div class="product-image-section">
+
+    <img
+    src="/static/images/{{ product[5] }}"
+    alt="{{ product[1] }}"
+    class="product-image"
+>
+</div>
+    <!-- RIGHT DETAILS -->
+
+    <div class="product-info-section">
+
+        <h1>{{ product[1] }}</h1>
+
+        <p class="desc">
+            {{ product[2] }}
+        </p>
+
+        <p class="price">
+            ₹{{ product[3] }}
+        </p>
+
+        <!-- INGREDIENTS -->
+
+        <h3>Ingredients</h3>
+
+        <div class="tags">
+
+            {% for i in ingredients %}
+
+                <span class="tag">
+                    {{ i[0] }}
+                </span>
+
+            {% endfor %}
+
+        </div>
+
+        <!-- CONCERNS -->
+
+        <h3>Good For</h3>
+
+        <div class="tags">
+
+            {% for c in concerns %}
+
+                <span class="tag">
+                    {{ c[0] }}
+                </span>
+
+            {% endfor %}
+
+        </div>
+
+        <!-- ACTIONS -->
+
+        <div class="product-actions">
+
+            <span
+                class="wishlist-icon {% if in_wishlist %}active{% endif %}"
+                onclick="toggleWishlist('{{ product[0] }}', this)"
+            >
+
+                {% if in_wishlist %}
+                    ❤️
+                {% else %}
+                    🤍
+                {% endif %}
+
+            </span>
+
+            <button
+                class="add-to-cart"
+                onclick="addToCart('{{ product[0] }}', this)"
+            >
+                Add to Cart
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<hr>
+
+<!-- ================= REVIEWS ================= -->
+<h2 class="review-title">Customer Reviews</h2>
+
+<div class="reviews-section">
+
+    {% if reviews and reviews|length > 0 %}
+        {% for r in reviews %}
+            <div class="review-card">
+
+                <div class="rating">
+                    {% for i in range(r[0]) %}
+                        ★
+                    {% endfor %}
+                    {% for i in range(5 - r[0]) %}
+                        ☆
+                    {% endfor %}
+                </div>
+
+                <p class="review-text">{{ r[1] }}</p>
+                <small class="review-user">— {{ r[2] }}</small>
+
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-reviews">No reviews yet. Be the first to review this product!</p>
+    {% endif %}
+
+</div>
+
+<hr>
+
+<!-- ================= REVIEW FORM ================= -->
+<h2 class="review-title">Write a Review</h2>
+
+<form action="/add_review/{{ product[0] }}" method="POST" class="review-form">
+
+    <label>Rating (1 to 5)</label>
+
+    <div class="star-rating">
+        <input type="radio" name="rating" value="5" id="star5"><label for="star5">★</label>
+        <input type="radio" name="rating" value="4" id="star4"><label for="star4">★</label>
+        <input type="radio" name="rating" value="3" id="star3"><label for="star3">★</label>
+        <input type="radio" name="rating" value="2" id="star2"><label for="star2">★</label>
+        <input type="radio" name="rating" value="1" id="star1"><label for="star1">★</label>
+    </div>
+
+    <label>Your Review</label>
+    <textarea name="review" rows="4" required></textarea>
+
+    <button type="submit" class="btn-submit">Submit Review</button>
+
+</form>
+<h2>Related Products</h2>
+
+<div class="product-container">
+
+{% for p in related_products %}
+
+<div class="product-card">
+
+    <a href="/product/{{ p[0] }}">
+
+        <img src="{{ url_for('static', filename='images/' + p[5]) }}">
+
+        <h3>{{ p[1] }}</h3>
+
+        <p>₹{{ p[3] }}</p>
+
+    </a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+<!-- ================= JS ================= -->
+<script>
+
+function toggleWishlist(productId, btn) {
+
+    fetch("/api/wishlist/add", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            product_id: productId
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        // ✅ TOGGLE HEART UI
+        btn.classList.toggle("active");
+
+        if (btn.classList.contains("active")) {
+            btn.innerText = "❤️";
+        } else {
+            btn.innerText = "🤍";
+        }
+
+        // OPTIONAL: update navbar count if exists
+        if (typeof loadWishlistCount === "function") {
+            loadWishlistCount();
+        }
+    })
+    .catch(err => {
+        console.log("Wishlist error:", err);
+    });
+}
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Skincare App</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+
+  <!-- BRAND -->
+  <h2 class="logo">
+    <a href="/dashboard">GlowCare</a>
+  </h2>
+
+  <!-- CENTER -->
+  <div class="nav-center">
+
+    <!-- CONCERNS -->
+    <div class="dropdown">
+      <span onclick="toggleDropdown('concernMenu')">
+        Shop by Concern ▾
+      </span>
+
+      <div id="concernMenu" class="dropdown-menu">
+        {% for c in concerns %}
+          <a href="/filter/concern/{{ c[1] }}">
+            {{ c[1] }}
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- INGREDIENTS -->
+    <div class="dropdown">
+      <span onclick="toggleDropdown('ingredientMenu')">
+        Shop by Ingredient ▾
+      </span>
+
+      <div id="ingredientMenu" class="dropdown-menu">
+        {% for i in ingredients %}
+          <a href="/filter/ingredient/{{ i[1] }}">
+            {{ i[1] }}
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SEARCH -->
+  <form method="GET" action="/search" class="search-bar">
+    <input type="text" name="q" placeholder="Search products..." />
+  </form>
+
+  <!-- RIGHT -->
+  <div class="nav-right">
+    <a href="/about">About</a>
+    <a href="/cart">Cart 🛒 (<span id="cart-count"></span>)</a>
+    <a href="/orders">Orders 📦</a>
+    <a href="/profile">Profile 👤</a>
+    {% if session.get("user_id") == 1 %}
+    <a href="/admin">Admin ⚙️</a>
+    {% endif %}
+  </div>
+
+</nav>
+
+{% block content %}{% endblock %}
+
+<!-- JS -->
+<script>
+function toggleDropdown(id) {
+    const menu = document.getElementById(id);
+
+    if (menu.style.display === "block") {
+        menu.style.display = "none";
+    } else {
+        menu.style.display = "block";
+    }
+}
+
+
+function addToCart(productId, button) {
+
+    button.classList.add("clicked");
+
+    fetch("/api/cart/add", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ product_id: productId })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        loadCartCount();
+
+        setTimeout(() => {
+            button.classList.remove("clicked");
+        }, 400);
+
+        console.log("Added to cart ✅");
+    })
+    .catch(err => {
+        console.log("Error:", err);
+    });
+}
+
+
+function loadCartCount() {
+    fetch("/api/cart")
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("cart-count").innerText = data.length;
+    });
+}
+
+
+function loadCart() {
+    fetch("/api/cart")
+    .then(res => res.json())
+    .then(data => {
+        let container = document.getElementById("cart-container");
+
+        if (data.length === 0) {
+            container.innerHTML = "<p>Cart is empty</p>";
+            return;
+        }
+
+        let total = 0;
+
+        container.innerHTML = data.map(item => {
+            total += item.price * item.quantity;
+
+            return `
+                <div class="cart-item">
+                    <img src="/static/images/${item.image}" width="60">
+                    <h3>${item.name}</h3>
+                    <p>₹${item.price}</p>
+
+                    <button onclick="updateQty(${item.cart_id}, ${item.quantity - 1})">➖</button>
+                    ${item.quantity}
+                    <button onclick="updateQty(${item.cart_id}, ${item.quantity + 1})">➕</button>
+
+                    <button onclick="removeItem(${item.cart_id})">Remove</button>
+                </div>
+            `;
+        }).join("");
+
+        // ✅ ADD TOTAL BELOW
+        container.innerHTML += `
+            <h2>Total: ₹${total}</h2>
+            <button onclick="checkout()">Checkout</button>
+        `;
+    });
+}
+
+
+function toggleWishlist(productId, btn) {
+
+    fetch("/api/wishlist/toggle", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            product_id: productId
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if (data.status === "added") {
+            btn.classList.add("active");
+            btn.innerText = "❤️";
+        } else {
+            btn.classList.remove("active");
+            btn.innerText = "🤍";
+        }
+
+        // update navbar count if exists
+        if (typeof loadWishlistCount === "function") {
+            loadWishlistCount();
+        }
+    })
+    .catch(err => console.log("Wishlist error:", err));
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+
+<div class="orders-page">
+
+    <h1 class="orders-title">Your Orders</h1>
+
+    <div id="orders-container" class="orders-container"></div>
+
+</div>
+
+<script>
+
+fetch("/orders-data")
+.then(res => res.json())
+.then(data => renderOrders(data));
+
+function renderOrders(orders) {
+
+    let html = "";
+
+    if (orders.length === 0) {
+
+        html = `
+            <div class="empty-orders">
+                No orders yet
+            </div>
+        `;
+
+        document.getElementById("orders-container").innerHTML = html;
+        return;
+    }
+
+    orders.forEach(order => {
+
+        let statusClass = order.status.replaceAll(" ", "");
+
+        html += `
+            <div class="order-card">
+
+                <div class="order-header">
+
+                    <div>
+                        <div class="order-id">
+                            Order #${order.order_id}
+                        </div>
+
+                        <div class="order-total">
+                            ₹${order.total}
+                        </div>
+                    </div>
+
+                    <div class="status ${statusClass}">
+                        ${order.status}
+                    </div>
+
+                </div>
+
+                <div class="order-items"
+                     id="items-${order.order_id}">
+
+                     Loading items...
+
+                </div>
+
+            </div>
+        `;
+    });
+
+    document.getElementById("orders-container").innerHTML = html;
+
+    orders.forEach(order => {
+        loadItems(order.order_id);
+    });
+}
+
+function loadItems(orderId) {
+
+    fetch("/api/order-items/" + orderId)
+
+    .then(res => res.json())
+
+    .then(items => {
+
+        let html = "";
+
+        items.forEach(item => {
+
+            html += `
+                <div class="order-item">
+
+                    <img src="/static/images/${item.image}">
+
+                    <div>
+
+                        <div class="item-name">
+                            ${item.name}
+                        </div>
+
+                        <p>Quantity: ${item.quantity}</p>
+
+                        <p>Price: ₹${item.price}</p>
+
+                    </div>
+
+                </div>
+            `;
+        });
+
+        document.getElementById(
+            "items-" + orderId
+        ).innerHTML = html;
+    });
+}
+
+</script>
+
+{% endblock %}
