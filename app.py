@@ -12,72 +12,7 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
 # ---------------- APP INIT ----------------
-
 app = Flask(__name__)
-@app.route("/admin-dashboard")
-def admin_dashboard():
-
-    # ADMIN SECURITY
-    if "user_id" not in session or session["user_id"] != 1:
-        return redirect("/login")
-
-    # TOTAL USERS
-    total_users = db.session.execute(text("""
-        SELECT COUNT(*)
-        FROM users
-    """)).fetchone()[0]
-
-    # TOTAL ORDERS
-    total_orders = db.session.execute(text("""
-        SELECT COUNT(*)
-        FROM orders
-    """)).fetchone()[0]
-
-    # TOTAL REVENUE
-    total_revenue = db.session.execute(text("""
-        SELECT IFNULL(SUM(total_amount), 0)
-        FROM orders
-        WHERE status != 'Cancelled'
-    """)).fetchone()[0]
-
-    # LOW STOCK PRODUCTS
-    low_stock = db.session.execute(text("""
-        SELECT product_id, name, stock
-
-        FROM products
-
-        WHERE stock <= 5
-
-        ORDER BY stock ASC
-    """)).fetchall()
-
-    # RECENT ORDERS
-    recent_orders = db.session.execute(text("""
-        SELECT
-            o.order_id,
-            u.name,
-            o.total_amount,
-            o.status,
-            o.created_at
-
-        FROM orders o
-
-        JOIN users u
-        ON o.user_id = u.user_id
-
-        ORDER BY o.order_id DESC
-
-        LIMIT 5
-    """)).fetchall()
-
-    return render_template(
-        "admin_dashboard.html",
-        total_users=total_users,
-        total_orders=total_orders,
-        total_revenue=total_revenue,
-        low_stock=low_stock,
-        recent_orders=recent_orders
-    )
 
 import os
 from werkzeug.utils import secure_filename
@@ -85,18 +20,29 @@ from werkzeug.utils import secure_filename
 UPLOAD_FOLDER = "static/images"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
-app.config['SECRET_KEY'] = "your_secret_key_here"
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:Anushka%40123@localhost:3306/skincare"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'YOUR_EMAIL@gmail.com'
-app.config['MAIL_PASSWORD'] = 'YOUR_APP_PASSWORD'
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "your_secret_key_here")
 
+# DATABASE CONFIG FOR RENDER / RAILWAY
+database_url = os.getenv("DATABASE_URL")
+
+if database_url.startswith("mysql://"):
+    database_url = database_url.replace(
+        "mysql://",
+        "mysql+pymysql://",
+        1
+    )
+
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+# MAIL CONFIG
+app.config["MAIL_SERVER"] = "smtp.gmail.com"
+app.config["MAIL_PORT"] = 587
+app.config["MAIL_USE_TLS"] = True
+app.config["MAIL_USERNAME"] = os.getenv("MAIL_USERNAME")
+app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD")
 
 db = SQLAlchemy(app)
-
 mail = Mail(app)
 
 # ---------------- ADMIN SECURITY ----------------
@@ -493,56 +439,7 @@ def search():
         total_pages=1
     )
 
-    q = request.args.get("q")
-
-    products = db.session.execute(text("""
-    SELECT
-        p.*,
-        IFNULL(AVG(r.rating), 0) AS avg_rating
-
-    FROM products p
-
-    LEFT JOIN reviews r
-    ON p.product_id = r.product_id
-
-    WHERE p.name LIKE :q
-    OR p.description LIKE :q
-
-    GROUP BY p.product_id
-"""), {
-    "q": f"%{q}%"
-}).fetchall()
-
-    concerns = db.session.execute(text("""
-        SELECT * FROM concerns
-    """)).fetchall()
-
-    ingredients = db.session.execute(text("""
-        SELECT * FROM ingredients
-    """)).fetchall()
-
-    wishlist_ids = []
-
-    if "user_id" in session:
-
-        data = db.session.execute(text("""
-            SELECT product_id
-            FROM wishlist
-            WHERE user_id=:uid
-        """), {
-            "uid": session["user_id"]
-        }).fetchall()
-
-        wishlist_ids = [i[0] for i in data]
-
-    return render_template(
-    "dashboard.html",
-    products=products,
-    concerns=concerns,
-    ingredients=ingredients,
-    wishlist_ids=wishlist_ids,
-    page=page
-)
+    
 # ---------------- CART PAGE ----------------
 @app.route("/cart")
 def cart():
@@ -797,7 +694,7 @@ def product_detail(id):
 # ---------------- REVIEWS ----------------
 @app.route("/add_review/<int:product_id>", methods=["POST"])
 def add_review(product_id):
-
+    
     db.session.execute(text("""
         INSERT INTO reviews (user_id, product_id, rating, comment)
         VALUES (:u, :p, :r, :c)
@@ -1031,7 +928,11 @@ def add_wishlist():
     return {"message": "added"}
 
 @app.route("/wishlist")
+@app.route("/wishlist")
 def wishlist():
+
+    if "user_id" not in session:
+        return redirect("/login")
 
     items = db.session.execute(text("""
         SELECT p.* FROM wishlist w
