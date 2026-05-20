@@ -92,7 +92,160 @@ a{
 .dropdown-menu a:hover{
     background: #f2f2f2;
 }
+/* ================= LOGIN PAGE ================= */
 
+.login-container {
+    width: 100%;
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    background: #fff;
+    padding: 35px;
+    border-radius: 14px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.login-card h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #d60000;
+    font-size: 28px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+    transition: 0.3s ease;
+}
+
+.login-form input:focus {
+    border-color: #d60000;
+    box-shadow: 0 0 5px rgba(214, 0, 0, 0.2);
+}
+
+.login-form button {
+    padding: 13px;
+    background: #d60000;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.login-form button:hover {
+    background: #b40000;
+}
+
+.login-extra {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 14px;
+}
+
+.login-extra a {
+    color: #d60000;
+    font-weight: bold;
+}
+
+.login-extra a:hover {
+    text-decoration: underline;
+}
+/* ================= REGISTER PAGE ================= */
+
+.register-container {
+    width: 100%;
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.register-card {
+    width: 100%;
+    max-width: 420px;
+    background: #fff;
+    padding: 35px;
+    border-radius: 14px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.register-card h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #d60000;
+    font-size: 28px;
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.register-form input {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+    transition: 0.3s ease;
+}
+
+.register-form input:focus {
+    border-color: #d60000;
+    box-shadow: 0 0 5px rgba(214, 0, 0, 0.2);
+}
+
+.register-form button {
+    padding: 13px;
+    background: #d60000;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.register-form button:hover {
+    background: #b40000;
+}
+
+.register-extra {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 14px;
+}
+
+.register-extra a {
+    color: #d60000;
+    font-weight: bold;
+}
+
+.register-extra a:hover {
+    text-decoration: underline;
+}
 /* ================= PRODUCT GRID ================= */
 
 .product-container{
@@ -400,18 +553,158 @@ a{
 }
 
 /* ================= ORDERS ================= */
+/* =========================
+   ORDERS PAGE
+========================= */
 
-.orders-container{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+.orders-page {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.orders-title {
+    font-size: 32px;
+    margin-bottom: 25px;
+    color: #222;
+    text-align: center;
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.empty-orders {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 18px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+/* =========================
+   ORDER CARD
+========================= */
+
+.orders-container {
+    display: flex;
+    flex-direction: column;
     gap: 20px;
 }
 
-.order-card{
+.order-card {
     background: white;
+    border-radius: 14px;
     padding: 20px;
-    border-radius: 15px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    transition: 0.3s;
 }
+
+.order-card:hover {
+    transform: translateY(-2px);
+}
+
+/* =========================
+   ORDER HEADER
+========================= */
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.order-id {
+    font-size: 20px;
+    font-weight: bold;
+    color: #222;
+}
+
+.order-total {
+    margin-top: 5px;
+    font-size: 16px;
+    color: #666;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.status {
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+}
+
+/* Status Colors */
+
+.Placed {
+    background: #ff9800;
+}
+
+.Shipped {
+    background: #2196f3;
+}
+
+.OutforDelivery {
+    background: #9c27b0;
+}
+
+.Delivered {
+    background: #4caf50;
+}
+
+.Cancelled {
+    background: #f44336;
+}
+
+/* =========================
+   ORDER ITEMS
+========================= */
+
+.order-items {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    background: #f8f9fb;
+    padding: 12px;
+    border-radius: 10px;
+}
+
+.order-item img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 10px;
+    background: #eee;
+}
+
+.item-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #222;
+}
+
+.order-item p {
+    font-size: 15px;
+    color: #555;
+    margin: 4px 0;
+}
+
+
 
 /* ================= SUCCESS ================= */
 
@@ -519,5 +812,25 @@ hr{
 
     .product-image{
         max-width: 100%;
+    }
+
+    .orders-page {
+        padding: 15px;
+    }
+
+    .order-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .order-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .order-item img {
+        width: 100%;
+        height: 220px;
     }
 }

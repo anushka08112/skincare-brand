@@ -86,9 +86,7 @@ UPLOAD_FOLDER = "static/images"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 app.config['SECRET_KEY'] = "your_secret_key_here"
-
-
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:Anushka%40123@localhost:3306/skincare"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
@@ -207,7 +205,7 @@ admin.add_view(OrderItemAdmin(OrderItem, db.session))
 # ---------------- ROUTES ----------------
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return redirect(url_for("login"))
 
 @app.route("/dashboard")
 def dashboard():
@@ -459,9 +457,9 @@ def search():
     OR p.description LIKE :q
 
     GROUP BY p.product_id
-"""), {
-    "q": f"%{q}%"
-}).fetchall()
+    """), {
+        "q": f"%{q}%"
+    }).fetchall()
 
     concerns = db.session.execute(text("""
         SELECT * FROM concerns
@@ -490,8 +488,61 @@ def search():
         products=products,
         concerns=concerns,
         ingredients=ingredients,
-        wishlist_ids=wishlist_ids
+        wishlist_ids=wishlist_ids,
+        page=1,
+        total_pages=1
     )
+
+    q = request.args.get("q")
+
+    products = db.session.execute(text("""
+    SELECT
+        p.*,
+        IFNULL(AVG(r.rating), 0) AS avg_rating
+
+    FROM products p
+
+    LEFT JOIN reviews r
+    ON p.product_id = r.product_id
+
+    WHERE p.name LIKE :q
+    OR p.description LIKE :q
+
+    GROUP BY p.product_id
+"""), {
+    "q": f"%{q}%"
+}).fetchall()
+
+    concerns = db.session.execute(text("""
+        SELECT * FROM concerns
+    """)).fetchall()
+
+    ingredients = db.session.execute(text("""
+        SELECT * FROM ingredients
+    """)).fetchall()
+
+    wishlist_ids = []
+
+    if "user_id" in session:
+
+        data = db.session.execute(text("""
+            SELECT product_id
+            FROM wishlist
+            WHERE user_id=:uid
+        """), {
+            "uid": session["user_id"]
+        }).fetchall()
+
+        wishlist_ids = [i[0] for i in data]
+
+    return render_template(
+    "dashboard.html",
+    products=products,
+    concerns=concerns,
+    ingredients=ingredients,
+    wishlist_ids=wishlist_ids,
+    page=page
+)
 # ---------------- CART PAGE ----------------
 @app.route("/cart")
 def cart():
