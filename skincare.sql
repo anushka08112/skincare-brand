@@ -19,7 +19,7 @@
 -- Table structure for table `addresses`
 --
 
-DROP TABLE IF EXISTS `addresses`;
+
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `addresses` (
@@ -46,7 +46,7 @@ UNLOCK TABLES;
 -- Table structure for table `cart`
 --
 
-DROP TABLE IF EXISTS `cart`;
+
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cart` (
@@ -76,7 +76,6 @@ UNLOCK TABLES;
 -- Table structure for table `concerns`
 --
 
-DROP TABLE IF EXISTS `concerns`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `concerns` (
@@ -100,7 +99,6 @@ UNLOCK TABLES;
 -- Table structure for table `coupons`
 --
 
-DROP TABLE IF EXISTS `coupons`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `coupons` (
@@ -127,7 +125,7 @@ UNLOCK TABLES;
 -- Table structure for table `ingredients`
 --
 
-DROP TABLE IF EXISTS `ingredients`;
+
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ingredients` (
@@ -151,7 +149,7 @@ UNLOCK TABLES;
 -- Table structure for table `order_items`
 --
 
-DROP TABLE IF EXISTS `order_items`;
+
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `order_items` (
@@ -182,7 +180,7 @@ UNLOCK TABLES;
 -- Table structure for table `orders`
 --
 
-DROP TABLE IF EXISTS `orders`;
+
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `orders` (
@@ -212,7 +210,7 @@ UNLOCK TABLES;
 -- Table structure for table `payments`
 --
 
-DROP TABLE IF EXISTS `payments`;
+
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `payments` (
@@ -237,7 +235,7 @@ UNLOCK TABLES;
 -- Table structure for table `product_concerns`
 --
 
-DROP TABLE IF EXISTS `product_concerns`;
+
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `product_concerns` (
@@ -266,7 +264,6 @@ UNLOCK TABLES;
 -- Table structure for table `product_ingredients`
 --
 
-DROP TABLE IF EXISTS `product_ingredients`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `product_ingredients` (
@@ -295,7 +292,7 @@ UNLOCK TABLES;
 -- Table structure for table `products`
 --
 
-DROP TABLE IF EXISTS `products`;
+
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `products` (
@@ -323,7 +320,7 @@ UNLOCK TABLES;
 -- Table structure for table `reviews`
 --
 
-DROP TABLE IF EXISTS `reviews`;
+
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reviews` (
@@ -355,7 +352,7 @@ UNLOCK TABLES;
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
+
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
@@ -385,7 +382,7 @@ UNLOCK TABLES;
 -- Table structure for table `wishlist`
 --
 
-DROP TABLE IF EXISTS `wishlist`;
+
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `wishlist` (

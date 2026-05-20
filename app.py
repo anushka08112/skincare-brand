@@ -18,12 +18,13 @@ import os
 from werkzeug.utils import secure_filename
 
 UPLOAD_FOLDER = "static/images"
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "your_secret_key_here")
+# ---------------- DATABASE CONFIG ----------------
 
-# DATABASE CONFIG FOR RENDER / RAILWAY
 database_url = os.getenv("DATABASE_URL")
+
+if not database_url:
+    raise RuntimeError("DATABASE_URL is not set")
 
 if database_url.startswith("mysql://"):
     database_url = database_url.replace(
@@ -691,10 +692,14 @@ def product_detail(id):
     rating_data=rating_data
 )
 
+
 # ---------------- REVIEWS ----------------
 @app.route("/add_review/<int:product_id>", methods=["POST"])
 def add_review(product_id):
-    
+
+    if "user_id" not in session:
+        return redirect("/login")
+
     db.session.execute(text("""
         INSERT INTO reviews (user_id, product_id, rating, comment)
         VALUES (:u, :p, :r, :c)
@@ -706,9 +711,8 @@ def add_review(product_id):
     })
 
     db.session.commit()
+
     return redirect(url_for("product_detail", id=product_id))
-
-
 # ---------------- ABOUT ----------------
 @app.route("/about")
 def about():
@@ -916,6 +920,10 @@ def add_payment():
 
 @app.route("/api/wishlist/add", methods=["POST"])
 def add_wishlist():
+
+    if "user_id" not in session:
+        return {"error": "Login required"}, 401
+
     db.session.execute(text("""
         INSERT INTO wishlist (user_id, product_id)
         VALUES (:u, :p)
@@ -925,9 +933,8 @@ def add_wishlist():
     })
 
     db.session.commit()
-    return {"message": "added"}
 
-@app.route("/wishlist")
+    return {"message": "added"}
 @app.route("/wishlist")
 def wishlist():
 
@@ -1361,8 +1368,6 @@ def add_product():
 
 # ---------------- INIT ----------------
 
-with app.app_context():
-    db.create_all()
 
 if __name__ == "__main__":
     app.run(debug=True)
