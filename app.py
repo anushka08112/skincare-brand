@@ -10,11 +10,11 @@ from flask_mail import Mail, Message
 # ADMIN IMPORTS
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
-
+import os
 # ---------------- APP INIT ----------------
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "glowcare_secret_2026")
-import os
+
 from werkzeug.utils import secure_filename
 
 UPLOAD_FOLDER = "static/images"
