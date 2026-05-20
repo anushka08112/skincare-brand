@@ -13,7 +13,7 @@ from flask_admin.contrib.sqla import ModelView
 
 # ---------------- APP INIT ----------------
 app = Flask(__name__)
-
+app.secret_key = os.getenv("SECRET_KEY", "glowcare_secret_2026")
 import os
 from werkzeug.utils import secure_filename
 
@@ -35,7 +35,7 @@ if database_url.startswith("mysql://"):
 
 app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
+app.secret_key = os.getenv("SECRET_KEY", "glowcare_secret_2026")
 # MAIL CONFIG
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_PORT"] = 587
