@@ -119,47 +119,6 @@ function loadCartCount() {
     });
 }
 
-
-function loadCart() {
-    fetch("/api/cart")
-    .then(res => res.json())
-    .then(data => {
-        let container = document.getElementById("cart-container");
-
-        if (data.length === 0) {
-            container.innerHTML = "<p>Cart is empty</p>";
-            return;
-        }
-
-        let total = 0;
-
-        container.innerHTML = data.map(item => {
-            total += item.price * item.quantity;
-
-            return `
-                <div class="cart-item">
-                    <img src="/static/images/${item.image}" width="60">
-                    <h3>${item.name}</h3>
-                    <p>₹${item.price}</p>
-
-                    <button onclick="updateQty(${item.cart_id}, ${item.quantity - 1})">➖</button>
-                    ${item.quantity}
-                    <button onclick="updateQty(${item.cart_id}, ${item.quantity + 1})">➕</button>
-
-                    <button onclick="removeItem(${item.cart_id})">Remove</button>
-                </div>
-            `;
-        }).join("");
-
-        // ✅ ADD TOTAL BELOW
-        container.innerHTML += `
-            <h2>Total: ₹${total}</h2>
-            <button onclick="checkout()">Checkout</button>
-        `;
-    });
-}
-
-
 function toggleWishlist(productId, btn) {
 
     fetch("/api/wishlist/toggle", {

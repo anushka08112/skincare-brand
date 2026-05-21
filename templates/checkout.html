@@ -5,55 +5,98 @@
 
     <h1>Checkout 🧾</h1>
 
-    <!-- 📍 ADDRESS SELECTION -->
-    <h2>Select Address</h2>
+    <!-- COUPON FORM -->
+    <form action="/checkout" method="GET" class="coupon-form">
 
+        <input 
+            type="text"
+            name="coupon"
+            placeholder="Enter Coupon Code"
+        >
+
+        <button type="submit" class="btn">
+            Apply Coupon
+        </button>
+
+    </form>
+
+    <!-- MAIN CHECKOUT FORM -->
     <form action="/place-order" method="POST">
+
+        <!-- ADDRESS -->
+        <h2>Select Address</h2>
 
         {% for a in addresses %}
         <div class="address-box">
-            <input type="radio" name="address_id" value="{{ a[0] }}" required>
-            <p>{{ a[2] }}, {{ a[3] }} - {{ a[4] }}</p>
+
+            <input 
+                type="radio"
+                name="address_id"
+                value="{{ a[0] }}"
+                required
+            >
+
+            <p>
+                {{ a[2] }}, {{ a[3] }} - {{ a[4] }}
+            </p>
+
         </div>
         {% endfor %}
 
+        <!-- NEW ADDRESS -->
         <h3>Add New Address</h3>
 
-        <input name="new_address" placeholder="Full Address">
-        <input name="city" placeholder="City">
-        <input name="pincode" placeholder="Pincode">
+        <input 
+            type="text"
+            name="new_address"
+            placeholder="Full Address"
+        >
 
-        <!-- 🛒 ORDER SUMMARY -->
+        <input 
+            type="text"
+            name="city"
+            placeholder="City"
+        >
+
+        <input 
+            type="text"
+            name="pincode"
+            placeholder="Pincode"
+        >
+
+        <!-- ORDER SUMMARY -->
         <h2>Order Summary</h2>
 
         {% for item in cart_items %}
         <div class="checkout-item">
-            <p>{{ item[0] }} x {{ item[2] }}</p>
-            <span>₹{{ item[1] * item[2] }}</span>
+
+            <p>
+                {{ item[0] }} x {{ item[2] }}
+            </p>
+
+            <span>
+                ₹{{ item[1] * item[2] }}
+            </span>
+
         </div>
         {% endfor %}
-        <form action="/checkout" method="GET">
 
-    <input type="text"
-           name="coupon"
-           placeholder="Enter Coupon Code">
+        <!-- DISCOUNT -->
+        <div class="discount-box">
+            Discount: ₹{{ discount }}
+        </div>
 
-    <button type="submit">
-        Apply Coupon
-    </button>
+        <!-- TOTAL -->
+        <div class="checkout-total">
+            Total: ₹{{ total }}
+        </div>
+
+        <!-- BUTTON -->
+        <button type="submit" class="btn place-order-btn">
+            Place Order
+        </button>
 
     </form>
-        <p>Discount: ₹{{ discount }}</p>
-
-<h2>Total: ₹{{ total }}</h2>
-
-        <button type="submit" class="btn">Place Order</button>
-
-    </form>
-    <div class="delivery-box">
-    <p><b>Delivery To:</b></p>
-    <p>{{ address[0] }}, {{ address[1] }} - {{ address[2] }}</p>
-</div>
 
 </div>
 
