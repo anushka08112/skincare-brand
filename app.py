@@ -269,6 +269,78 @@ def login():
 # ---------------- FILTER ----------------
 @app.route("/filter/ingredient/<path:name>")
 def filter_ingredient(name):
+
+    products = db.session.execute(text("""
+    
+        SELECT
+            p.product_id,
+            p.name,
+            p.description,
+            p.price,
+            p.stock,
+            p.image_url,
+
+            IFNULL(AVG(r.rating), 0) AS avg_rating,
+            COUNT(r.review_id) AS total_reviews
+
+        FROM products p
+
+        JOIN product_ingredients pi
+        ON p.product_id = pi.product_id
+
+        JOIN ingredients i
+        ON pi.ingredient_id = i.ingredient_id
+
+        LEFT JOIN reviews r
+        ON p.product_id = r.product_id
+
+        WHERE i.name = :name
+
+        GROUP BY
+            p.product_id,
+            p.name,
+            p.description,
+            p.price,
+            p.stock,
+            p.image_url
+
+    """), {
+        "name": name
+    }).fetchall()
+
+    concerns = db.session.execute(text("""
+        SELECT * FROM concerns
+    """)).fetchall()
+
+    ingredients = db.session.execute(text("""
+        SELECT * FROM ingredients
+    """)).fetchall()
+
+    wishlist_ids = []
+
+    if "user_id" in session:
+
+        data = db.session.execute(text("""
+        
+            SELECT product_id
+            FROM wishlist
+            WHERE user_id = :uid
+        
+        """), {
+            "uid": session["user_id"]
+        }).fetchall()
+
+        wishlist_ids = [i[0] for i in data]
+
+    return render_template(
+        "dashboard.html",
+        products=products,
+        concerns=concerns,
+        ingredients=ingredients,
+        wishlist_ids=wishlist_ids,
+        page=1,
+        total_pages=1
+    )
     products = db.session.execute(text("""
     SELECT
         p.*,
