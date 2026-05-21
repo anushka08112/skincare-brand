@@ -606,7 +606,7 @@ table{
 
 /* TABLET */
 
-@media(max-width:900px){
+@media(max-width:450px){
 
     .navbar{
         flex-wrap:wrap;
@@ -630,7 +630,7 @@ table{
 
 /* MOBILE */
 
-@media(max-width:600px){
+@media(max-width:320px){
 
     .navbar{
         padding:12px 14px;
