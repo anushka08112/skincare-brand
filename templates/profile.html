@@ -102,20 +102,7 @@
     </div>
 
 
-<!-- ================= ORDERS ================= -->
-    <div id="orders" class="profile-section hidden">
-        <h2>Order History 🧾</h2>
 
-        {% for o in orders %}
-            <div class="card">
-                <p><b>Order #{{ o[0] }}</b></p>
-                <p>₹{{ o[2] }}</p>
-                <p>{{ o[3] }}</p>
-            </div>
-        {% else %}
-            <p>No orders</p>
-        {% endfor %}
-    </div>
 
 </div>
 
