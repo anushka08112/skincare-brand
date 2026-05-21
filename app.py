@@ -161,18 +161,18 @@ def dashboard():
     sort = request.args.get("sort")
 
     query = """
-SELECT
-    p.*,
-    IFNULL(AVG(r.rating), 0) AS avg_rating,
-    COUNT(r.review_id) AS total_reviews
+    SELECT
+        p.*,
+        IFNULL(AVG(r.rating), 0) AS avg_rating,
+        COUNT(r.review_id) AS total_reviews
 
-FROM products p
+    FROM products p
 
-LEFT JOIN reviews r
-ON p.product_id = r.product_id
+    LEFT JOIN reviews r
+    ON p.product_id = r.product_id
 
-GROUP BY p.product_id
-"""
+    GROUP BY p.product_id
+    """
 
     if sort == "low":
         query += " ORDER BY price ASC"
@@ -267,31 +267,38 @@ def login():
 
 
 # ---------------- FILTER ----------------
-@app.route("/filter/ingredient/<name>")
+@app.route("/filter/ingredient/<path:name>")
 def filter_ingredient(name):
-
     products = db.session.execute(text("""
     SELECT
         p.*,
-        IFNULL(AVG(r.rating), 0) AS avg_rating
+        IFNULL(AVG(r.rating), 0) AS avg_rating,
+        COUNT(r.review_id) AS total_reviews
 
     FROM products p
 
-    JOIN product_ingredients pi
-    ON p.product_id = pi.product_id
+    JOIN product_concerns pc
+    ON p.product_id = pc.product_id
 
-    JOIN ingredients i
-    ON pi.ingredient_id = i.ingredient_id
+    JOIN concerns c
+    ON pc.concern_id = c.concern_id
 
     LEFT JOIN reviews r
     ON p.product_id = r.product_id
 
-    WHERE i.name = :name
+    WHERE c.name = :name
 
-    GROUP BY p.product_id
-"""), {
+    GROUP BY
+        p.product_id,
+        p.name,
+        p.description,
+        p.price,
+        p.image_url,
+        p.stock
+    """), {
     "name": name
 }).fetchall()
+
     concerns = db.session.execute(text("""
         SELECT * FROM concerns
     """)).fetchall()
@@ -324,7 +331,7 @@ def filter_ingredient(name):
     total_pages=1
 )
 
-@app.route("/filter/concern/<name>")
+@app.route("/filter/concern/<path:name>")
 def filter_concern(name):
 
     products = db.session.execute(text("""
