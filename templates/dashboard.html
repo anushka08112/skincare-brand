@@ -4,11 +4,15 @@
 
 <!-- SORT -->
 
-<div class="sort-box">
+<div class="flex justify-end mb-8">
 
     <form method="GET" action="/dashboard">
 
-        <select name="sort" onchange="this.form.submit()">
+        <select 
+            name="sort"
+            onchange="this.form.submit()"
+            class="px-4 py-2 border border-gray-300 rounded-xl shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-red-400"
+        >
 
             <option value="">Sort Products</option>
 
@@ -41,16 +45,18 @@
 
 <!-- PRODUCTS -->
 
-<div class="product-container">
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
 
     {% for p in products %}
 
-    <div class="product-card">
+    <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden relative">
 
         <!-- WISHLIST -->
 
-        <div class="wishlist-icon"
-             onclick="toggleWishlist('{{ p.product_id }}', this)">
+        <div 
+            class="absolute top-4 right-4 text-2xl cursor-pointer z-10"
+            onclick="toggleWishlist('{{ p.product_id }}', this)"
+        >
              
             {% if p.product_id in wishlist_ids %}
                 ❤️
@@ -63,32 +69,40 @@
         <!-- CLICKABLE PRODUCT -->
 
         <a href="{{ url_for('product_detail', id=p.product_id) }}"
-           class="product-link">
+           class="block">
 
             <img
                 src="{{ url_for('static', filename='images/' + p.image_url) }}"
                 alt="{{ p.name }}"
-                class="product-image"
+                class="w-full h-64 object-cover"
             >
 
-            <h3>{{ p.name }}</h3>
+            <div class="p-5">
 
-            <p class="price">
-                ₹{{ p.price }}
-            </p>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">
+                    {{ p.name }}
+                </h3>
 
-            <p class="rating">
-                ⭐ {{ "%.1f"|format(p.avg_rating or 0) }}
-            </p>
+                <p class="text-red-600 font-bold text-xl mb-2">
+                    ₹{{ p.price }}
+                </p>
+
+                <p class="text-yellow-500 font-medium">
+                    ⭐ {{ "%.1f"|format(p.avg_rating or 0) }}
+                </p>
+
+            </div>
 
         </a>
 
         <!-- CART BUTTON -->
 
+        <div class="px-5 pb-5">
+
         {% if p.stock > 0 %}
 
             <button
-                class="add-to-cart"
+                class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl font-semibold transition duration-300"
                 onclick="addToCart('{{ p.product_id }}', this)">
                 
                 Add to Cart
@@ -97,15 +111,20 @@
 
         {% else %}
 
-            <p class="out-stock">
+            <p class="text-red-500 text-sm mb-2 font-medium">
                 Out of Stock
             </p>
 
-            <button class="out-btn" disabled>
+            <button 
+                class="w-full bg-gray-300 text-gray-600 py-3 rounded-xl cursor-not-allowed"
+                disabled
+            >
                 Unavailable
             </button>
 
         {% endif %}
+
+        </div>
 
     </div>
 
@@ -115,25 +134,31 @@
 
 <!-- PAGINATION -->
 
-<div class="pagination">
+<div class="flex items-center justify-center gap-6 mt-12">
 
     {% if page > 1 %}
 
-        <a href="/dashboard?page={{ page - 1 }}
-        &sort={{ request.args.get('sort', '') }}">
+        <a 
+            href="/dashboard?page={{ page - 1 }}
+            &sort={{ request.args.get('sort', '') }}"
+            class="px-5 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 transition"
+        >
             Previous
         </a>
 
     {% endif %}
 
-    <span>
+    <span class="text-gray-700 font-semibold">
         Page {{ page }} of {{ total_pages }}
     </span>
 
     {% if page < total_pages %}
 
-        <a href="/dashboard?page={{ page + 1 }}
-        &sort={{ request.args.get('sort', '') }}">
+        <a 
+            href="/dashboard?page={{ page + 1 }}
+            &sort={{ request.args.get('sort', '') }}"
+            class="px-5 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 transition"
+        >
             Next
         </a>
 

@@ -2,45 +2,118 @@
 
 {% block content %}
 
-<div class="success-container">
+<div class="min-h-screen bg-gradient-to-br from-red-50 to-white flex items-center justify-center px-4 py-10">
 
-    <div class="success-card">
+    <div class="w-full max-w-3xl bg-white rounded-3xl shadow-2xl p-8 md:p-10">
 
-        <div class="checkmark">✔</div>
+        <div class="flex justify-center mb-6">
 
-        <h1>Order Confirmed 🎉</h1>
+            <div class="w-24 h-24 rounded-full bg-green-100 flex items-center justify-center text-5xl text-green-600 shadow-md">
+                ✔
+            </div>
 
-        <p class="order-id">Order ID: <b>#{{ order_id }}</b></p>
+        </div>
+
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-4">
+            Order Confirmed 🎉
+        </h1>
+
+        <p class="text-center text-lg text-gray-600 mb-8">
+            Order ID:
+            <span class="font-bold text-gray-800">
+                #{{ order_id }}
+            </span>
+        </p>
 
         <!-- DELIVERY -->
-        <div class="delivery-box">
-            <p><b>Status:</b> {{ order[1] }}</p>
-            <p><b>Estimated Delivery:</b> {{ delivery_date }}</p>
+
+        <div class="bg-red-50 rounded-2xl p-6 mb-8">
+
+            <p class="text-lg text-gray-700 mb-2">
+                <b>Status:</b> {{ order[1] }}
+            </p>
+
+            <p class="text-lg text-gray-700">
+                <b>Estimated Delivery:</b> {{ delivery_date }}
+            </p>
+
         </div>
 
         <!-- ITEMS -->
-        <h3>Your Items</h3>
 
-        <div class="items">
+        <h3 class="text-2xl font-bold text-gray-800 mb-5">
+            Your Items
+        </h3>
+
+        <div class="space-y-4">
+
             {% for item in items %}
-            <div class="item">
-                <img src="/static/images/{{ item[1] }}" width="60">
-                <div>
-                    <p>{{ item[0] }}</p>
-                    <small>Qty: {{ item[2] }}</small>
+
+            <div class="flex items-center justify-between gap-4 bg-gray-50 rounded-2xl p-4">
+
+                <div class="flex items-center gap-4">
+
+                    <img 
+                        src="/static/images/{{ item[1] }}"
+                        class="w-20 h-20 object-cover rounded-xl shadow"
+                    >
+
+                    <div>
+
+                        <p class="font-semibold text-gray-800 text-lg">
+                            {{ item[0] }}
+                        </p>
+
+                        <small class="text-gray-500">
+                            Qty: {{ item[2] }}
+                        </small>
+
+                    </div>
+
                 </div>
-                <p>₹{{ item[3] }}</p>
+
+                <p class="font-bold text-red-600 text-lg">
+                    ₹{{ item[3] }}
+                </p>
+
             </div>
+
             {% endfor %}
+
         </div>
 
         <!-- TOTAL -->
-        <h2 class="total">Total: ₹{{ order[0] }}</h2>
+
+        <div class="flex justify-between items-center mt-8 border-t pt-6">
+
+            <h2 class="text-2xl font-bold text-gray-800">
+                Total
+            </h2>
+
+            <h2 class="text-3xl font-bold text-red-600">
+                ₹{{ order[0] }}
+            </h2>
+
+        </div>
 
         <!-- BUTTONS -->
-        <div class="buttons">
-            <a href="/dashboard" class="btn">Continue Shopping</a>
-            <a href="/orders" class="btn secondary">View Orders</a>
+
+        <div class="flex flex-col sm:flex-row gap-4 mt-10">
+
+            <a 
+                href="/dashboard"
+                class="flex-1 bg-red-600 hover:bg-red-700 text-white text-center py-4 rounded-2xl font-semibold transition duration-300 shadow-md"
+            >
+                Continue Shopping
+            </a>
+
+            <a 
+                href="/orders"
+                class="flex-1 border border-red-600 text-red-600 hover:bg-red-50 text-center py-4 rounded-2xl font-semibold transition duration-300"
+            >
+                View Orders
+            </a>
+
         </div>
 
     </div>

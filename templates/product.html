@@ -2,177 +2,243 @@
 
 {% block content %}
 
-<div class="product-detail">
+<div class="bg-gray-50 min-h-screen py-10 px-4">
 
-    <div class="product-detail-layout">
+<div class="max-w-6xl mx-auto bg-white rounded-3xl shadow-lg p-6 md:p-10">
 
-    <!-- LEFT IMAGE -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
 
- <div class="product-image-section">
+        <!-- LEFT IMAGE -->
 
-    <img
-    src="/static/images/{{ product[5] }}"
-    alt="{{ product[1] }}"
-    class="product-image"
->
-</div>
-    <!-- RIGHT DETAILS -->
+        <div class="flex items-center justify-center bg-gray-100 rounded-3xl p-6">
 
-    <div class="product-info-section">
-
-        <h1>{{ product[1] }}</h1>
-
-        <p class="desc">
-            {{ product[2] }}
-        </p>
-
-        <p class="price">
-            ₹{{ product[3] }}
-        </p>
-
-        <!-- INGREDIENTS -->
-
-        <h3>Ingredients</h3>
-
-        <div class="tags">
-
-            {% for i in ingredients %}
-
-                <span class="tag">
-                    {{ i[0] }}
-                </span>
-
-            {% endfor %}
-
-        </div>
-
-        <!-- CONCERNS -->
-
-        <h3>Good For</h3>
-
-        <div class="tags">
-
-            {% for c in concerns %}
-
-                <span class="tag">
-                    {{ c[0] }}
-                </span>
-
-            {% endfor %}
-
-        </div>
-
-        <!-- ACTIONS -->
-
-        <div class="product-actions">
-
-            <span
-                class="wishlist-icon {% if in_wishlist %}active{% endif %}"
-                onclick="toggleWishlist('{{ product[0] }}', this)"
+            <img
+                src="/static/images/{{ product[5] }}"
+                alt="{{ product[1] }}"
+                class="w-full max-w-md h-[420px] object-cover rounded-2xl shadow-md"
             >
 
-                {% if in_wishlist %}
-                    ❤️
-                {% else %}
-                    🤍
-                {% endif %}
-
-            </span>
-
-            <button
-                class="add-to-cart"
-                onclick="addToCart('{{ product[0] }}', this)"
-            >
-                Add to Cart
-            </button>
-
         </div>
 
-    </div>
+        <!-- RIGHT DETAILS -->
 
-</div>
+        <div>
 
-</div>
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">
+                {{ product[1] }}
+            </h1>
 
-<hr>
+            <p class="text-gray-600 text-lg leading-relaxed mb-5">
+                {{ product[2] }}
+            </p>
 
-<!-- ================= REVIEWS ================= -->
-<h2 class="review-title">Customer Reviews</h2>
+            <p class="text-3xl font-bold text-red-600 mb-6">
+                ₹{{ product[3] }}
+            </p>
 
-<div class="reviews-section">
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">
+                Ingredients
+            </h3>
 
-    {% if reviews and reviews|length > 0 %}
-        {% for r in reviews %}
-            <div class="review-card">
+            <div class="flex flex-wrap gap-3 mb-6">
 
-                <div class="rating">
-                    {% for i in range(r[0]) %}
-                        ★
-                    {% endfor %}
-                    {% for i in range(5 - r[0]) %}
-                        ☆
-                    {% endfor %}
-                </div>
-
-                <p class="review-text">{{ r[1] }}</p>
-                <small class="review-user">— {{ r[2] }}</small>
+                {% for i in ingredients %}
+                    <span class="bg-red-100 text-red-600 px-4 py-2 rounded-full text-sm font-semibold">
+                        {{ i[0] }}
+                    </span>
+                {% endfor %}
 
             </div>
-        {% endfor %}
-    {% else %}
-        <p class="no-reviews">No reviews yet. Be the first to review this product!</p>
-    {% endif %}
 
-</div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">
+                Good For
+            </h3>
 
-<hr>
+            <div class="flex flex-wrap gap-3 mb-8">
 
-<!-- ================= REVIEW FORM ================= -->
-<h2 class="review-title">Write a Review</h2>
+                {% for c in concerns %}
+                    <span class="bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold">
+                        {{ c[0] }}
+                    </span>
+                {% endfor %}
 
-<form action="/add_review/{{ product[0] }}" method="POST" class="review-form">
+            </div>
 
-    <label>Rating (1 to 5)</label>
+            <div class="flex items-center gap-5">
 
-    <div class="star-rating">
-        <input type="radio" name="rating" value="5" id="star5"><label for="star5">★</label>
-        <input type="radio" name="rating" value="4" id="star4"><label for="star4">★</label>
-        <input type="radio" name="rating" value="3" id="star3"><label for="star3">★</label>
-        <input type="radio" name="rating" value="2" id="star2"><label for="star2">★</label>
-        <input type="radio" name="rating" value="1" id="star1"><label for="star1">★</label>
+                <span
+                    class="text-4xl cursor-pointer {% if in_wishlist %}active{% endif %}"
+                    onclick="toggleWishlist('{{ product[0] }}', this)"
+                >
+                    {% if in_wishlist %}
+                        ❤️
+                    {% else %}
+                        🤍
+                    {% endif %}
+                </span>
+
+                <button
+                    class="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-2xl font-semibold shadow-md transition"
+                    onclick="addToCart('{{ product[0] }}', this)"
+                >
+                    Add to Cart
+                </button>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <label>Your Review</label>
-    <textarea name="review" rows="4" required></textarea>
+</div>
 
-    <button type="submit" class="btn-submit">Submit Review</button>
+<!-- REVIEWS -->
 
-</form>
-<h2>Related Products</h2>
+<div class="max-w-6xl mx-auto mt-10">
 
-<div class="product-container">
+    <h2 class="text-3xl font-bold text-gray-800 mb-6">
+        Customer Reviews
+    </h2>
 
-{% for p in related_products %}
+    <div class="space-y-5">
 
-<div class="product-card">
+        {% if reviews and reviews|length > 0 %}
+            {% for r in reviews %}
 
-    <a href="/product/{{ p[0] }}">
+                <div class="bg-white rounded-2xl shadow-md p-6">
 
-        <img src="{{ url_for('static', filename='images/' + p[5]) }}">
+                    <div class="text-yellow-500 text-xl mb-2">
+                        {% for i in range(r[0]) %}
+                            ★
+                        {% endfor %}
+                        {% for i in range(5 - r[0]) %}
+                            ☆
+                        {% endfor %}
+                    </div>
 
-        <h3>{{ p[1] }}</h3>
+                    <p class="text-gray-700 mb-2">
+                        {{ r[1] }}
+                    </p>
 
-        <p>₹{{ p[3] }}</p>
+                    <small class="text-gray-500">
+                        — {{ r[2] }}
+                    </small>
 
-    </a>
+                </div>
+
+            {% endfor %}
+        {% else %}
+
+            <p class="bg-white rounded-2xl shadow-md p-6 text-gray-500">
+                No reviews yet. Be the first to review this product!
+            </p>
+
+        {% endif %}
+
+    </div>
 
 </div>
 
-{% endfor %}
+<!-- REVIEW FORM -->
+
+<div class="max-w-6xl mx-auto mt-10 bg-white rounded-3xl shadow-lg p-6 md:p-8">
+
+    <h2 class="text-3xl font-bold text-gray-800 mb-6">
+        Write a Review
+    </h2>
+
+    <form action="/add_review/{{ product[0] }}" method="POST" class="space-y-5">
+
+        <label class="block text-gray-700 font-semibold">
+            Rating (1 to 5)
+        </label>
+
+        <div class="flex flex-row-reverse justify-end gap-2 text-3xl">
+
+            <input class="hidden peer/star5" type="radio" name="rating" value="5" id="star5">
+            <label class="cursor-pointer text-gray-300 hover:text-yellow-400 peer-checked/star5:text-yellow-400" for="star5">★</label>
+
+            <input class="hidden peer/star4" type="radio" name="rating" value="4" id="star4">
+            <label class="cursor-pointer text-gray-300 hover:text-yellow-400 peer-checked/star4:text-yellow-400" for="star4">★</label>
+
+            <input class="hidden peer/star3" type="radio" name="rating" value="3" id="star3">
+            <label class="cursor-pointer text-gray-300 hover:text-yellow-400 peer-checked/star3:text-yellow-400" for="star3">★</label>
+
+            <input class="hidden peer/star2" type="radio" name="rating" value="2" id="star2">
+            <label class="cursor-pointer text-gray-300 hover:text-yellow-400 peer-checked/star2:text-yellow-400" for="star2">★</label>
+
+            <input class="hidden peer/star1" type="radio" name="rating" value="1" id="star1">
+            <label class="cursor-pointer text-gray-300 hover:text-yellow-400 peer-checked/star1:text-yellow-400" for="star1">★</label>
+
+        </div>
+
+        <label class="block text-gray-700 font-semibold">
+            Your Review
+        </label>
+
+        <textarea
+            name="review"
+            rows="4"
+            required
+            class="w-full border border-gray-300 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-red-400"
+        ></textarea>
+
+        <button
+            type="submit"
+            class="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-2xl font-semibold transition"
+        >
+            Submit Review
+        </button>
+
+    </form>
 
 </div>
 
-<!-- ================= JS ================= -->
+<!-- RELATED PRODUCTS -->
+
+<div class="max-w-6xl mx-auto mt-10">
+
+    <h2 class="text-3xl font-bold text-gray-800 mb-6">
+        Related Products
+    </h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+
+        {% for p in related_products %}
+
+            <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden">
+
+                <a href="/product/{{ p[0] }}">
+
+                    <img
+                        src="{{ url_for('static', filename='images/' + p[5]) }}"
+                        class="w-full h-56 object-cover"
+                    >
+
+                    <div class="p-4">
+
+                        <h3 class="text-lg font-semibold text-gray-800">
+                            {{ p[1] }}
+                        </h3>
+
+                        <p class="text-red-600 font-bold mt-2">
+                            ₹{{ p[3] }}
+                        </p>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</div>
+
 <script>
 
 function toggleWishlist(productId, btn) {
@@ -189,7 +255,6 @@ function toggleWishlist(productId, btn) {
     .then(res => res.json())
     .then(data => {
 
-        // ✅ TOGGLE HEART UI
         btn.classList.toggle("active");
 
         if (btn.classList.contains("active")) {
@@ -198,7 +263,6 @@ function toggleWishlist(productId, btn) {
             btn.innerText = "🤍";
         }
 
-        // OPTIONAL: update navbar count if exists
         if (typeof loadWishlistCount === "function") {
             loadWishlistCount();
         }

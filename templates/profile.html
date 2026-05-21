@@ -2,135 +2,200 @@
 
 {% block content %}
 
-<div class="profile-container">
+<div class="min-h-screen bg-gray-50 py-10 px-4">
 
-    <!-- ================= BASIC INFO ================= -->
-    <div class="profile-card">
-        <h1>My Profile 👤</h1>
+    <div class="max-w-5xl mx-auto">
 
-        <p><b>Name:</b> {{ user[0] }}</p>
-        <p><b>Email:</b> {{ user[1] }}</p>
-        <p><b>Joined:</b> {{ user[2] }}</p>
+        <div class="bg-white rounded-3xl shadow-lg p-8 mb-8">
 
-        <div class="profile-stats">
-            <div class="stat">
-                <h2>{{ total_orders }}</h2>
-                <p>Orders</p>
+            <h1 class="text-4xl font-bold text-gray-800 mb-6">
+                My Profile 👤
+            </h1>
+
+            <div class="space-y-2 text-gray-700 text-lg">
+                <p><b>Name:</b> {{ user[0] }}</p>
+                <p><b>Email:</b> {{ user[1] }}</p>
+                <p><b>Joined:</b> {{ user[2] }}</p>
             </div>
 
-            <div class="stat">
-                <h2>₹{{ total_spent }}</h2>
-                <p>Spent</p>
+            <div class="grid grid-cols-2 gap-5 mt-8">
+
+                <div class="bg-red-50 rounded-2xl p-6 text-center">
+                    <h2 class="text-3xl font-bold text-red-600">
+                        {{ total_orders }}
+                    </h2>
+                    <p class="text-gray-600 mt-1">Orders</p>
+                </div>
+
+                <div class="bg-red-50 rounded-2xl p-6 text-center">
+                    <h2 class="text-3xl font-bold text-red-600">
+                        ₹{{ total_spent }}
+                    </h2>
+                    <p class="text-gray-600 mt-1">Spent</p>
+                </div>
+
             </div>
+
         </div>
 
+        <div class="bg-white rounded-3xl shadow-lg p-6 mb-8">
 
-    <!-- ================= OPTIONS ================= -->
-    <div class="profile-menu">
-        <button onclick="toggleSection('edit')">✏️ Edit Profile</button>
-        <button onclick="toggleSection('address')">📍 Addresses</button>
-        <button onclick="toggleSection('payment')">💳 Payments</button>
-        <button onclick="toggleSection('wishlist')">❤️ Wishlist</button>
-        <button onclick="toggleSection('orders')">🧾 Orders</button>
-    </div>
+            <div class="flex flex-wrap gap-4 justify-center">
 
-    <!-- ================= EDIT PROFILE ================= -->
-    <div class="profile-section" style="display:none;">
-        <h2>Edit Profile</h2>
+                <button onclick="toggleSection('edit')" class="px-5 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition">
+                    ✏️ Edit Profile
+                </button>
 
-        <form method="POST">
-            <input name="name" value="{{ user[0] }}" required><br><br>
-            <input name="password" type="password" placeholder="New Password"><br><br>
-            <button class="btn">Update</button>
-        </form>
-    </div>
-    
-    <!-- ================= ADDRESSES ================= -->
-    <div id="address" class="profile-section hidden">
-        <h2>Addresses 📍</h2>
+                <button onclick="toggleSection('address')" class="px-5 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition">
+                    📍 Addresses
+                </button>
 
-        {% for a in addresses %}
-            <div class="card">
-                <p>{{ a[2] }}, {{ a[3] }}, {{ a[4] }}</p>
+                <button onclick="toggleSection('payment')" class="px-5 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition">
+                    💳 Payments
+                </button>
+
+                <button onclick="toggleSection('wishlist')" class="px-5 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition">
+                    ❤️ Wishlist
+                </button>
+
+                <button onclick="toggleSection('orders')" class="px-5 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition">
+                    🧾 Orders
+                </button>
+
             </div>
-        {% else %}
-            <p>No addresses</p>
-        {% endfor %}
 
-        <form method="POST" action="/add-address">
-            <input name="line1" placeholder="Address" required>
-            <input name="city" placeholder="City" required>
-            <input name="pincode" placeholder="Pincode" required>
-            <button class="btn">Add</button>
-        </form>
-    </div>
+        </div>
 
+        <div id="edit" class="profile-section bg-white rounded-3xl shadow-lg p-8 hidden">
 
-    <!-- ================= PAYMENTS ================= -->
-    <div id="payment" class="profile-section hidden">
-        <h2>Payment Methods 💳</h2>
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">
+                Edit Profile
+            </h2>
 
-        {% for p in payments %}
-            <div class="card">
-                <p>**** **** **** {{ p[2][-4:] }}</p>
+            <form method="POST" class="space-y-4">
+
+                <input
+                    name="name"
+                    value="{{ user[0] }}"
+                    required
+                    class="w-full border border-gray-300 rounded-2xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-red-400"
+                >
+
+                <input
+                    name="password"
+                    type="password"
+                    placeholder="New Password"
+                    class="w-full border border-gray-300 rounded-2xl px-5 py-3 focus:outline-none focus:ring-2 focus:ring-red-400"
+                >
+
+                <button class="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-xl font-semibold">
+                    Update
+                </button>
+
+            </form>
+
+        </div>
+
+        <div id="address" class="profile-section bg-white rounded-3xl shadow-lg p-8 hidden">
+
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">
+                Addresses 📍
+            </h2>
+
+            <div class="space-y-4 mb-6">
+
+                {% for a in addresses %}
+                    <div class="bg-gray-50 rounded-2xl p-5 text-gray-700">
+                        <p>{{ a[2] }}, {{ a[3] }}, {{ a[4] }}</p>
+                    </div>
+                {% else %}
+                    <p class="text-gray-500">No addresses</p>
+                {% endfor %}
+
             </div>
-        {% else %}
-            <p>No cards saved</p>
-        {% endfor %}
 
-        <form method="POST" action="/add-payment">
-            <input name="card_number" placeholder="Card Number">
-            <button class="btn">Add</button>
-        </form>
-    </div>
+            <form method="POST" action="/add-address" class="grid md:grid-cols-3 gap-4">
 
+                <input name="line1" placeholder="Address" required class="border border-gray-300 rounded-xl px-4 py-3">
+                <input name="city" placeholder="City" required class="border border-gray-300 rounded-xl px-4 py-3">
+                <input name="pincode" placeholder="Pincode" required class="border border-gray-300 rounded-xl px-4 py-3">
 
+                <button class="md:col-span-3 bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-xl font-semibold">
+                    Add
+                </button>
 
+            </form>
 
-    <!-- ================= WISHLIST ================= -->
-    <div id="wishlist" class="profile-section hidden">
-        <h2>Wishlist ❤️</h2>
+        </div>
 
-        {% for w in wishlist %}
-            <div class="card">
-                <img src="/static/images/{{ w[2] }}" width="60">
-                <p>{{ w[1] }}</p>
+        <div id="payment" class="profile-section bg-white rounded-3xl shadow-lg p-8 hidden">
+
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">
+                Payment Methods 💳
+            </h2>
+
+            <div class="space-y-4 mb-6">
+
+                {% for p in payments %}
+                    <div class="bg-gray-50 rounded-2xl p-5 text-gray-700">
+                        <p>**** **** **** {{ p[2][-4:] }}</p>
+                    </div>
+                {% else %}
+                    <p class="text-gray-500">No cards saved</p>
+                {% endfor %}
+
             </div>
-        {% else %}
-            <p>No wishlist items</p>
-        {% endfor %}
+
+            <form method="POST" action="/add-payment" class="space-y-4">
+
+                <input
+                    name="card_number"
+                    placeholder="Card Number"
+                    class="w-full border border-gray-300 rounded-xl px-4 py-3"
+                >
+
+                <button class="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-xl font-semibold">
+                    Add
+                </button>
+
+            </form>
+
+        </div>
+
+        <div id="wishlist" class="profile-section bg-white rounded-3xl shadow-lg p-8 hidden">
+
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">
+                Wishlist ❤️
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-5">
+
+                {% for w in wishlist %}
+                    <div class="flex items-center gap-4 bg-gray-50 rounded-2xl p-4">
+                        <img src="/static/images/{{ w[2] }}" class="w-20 h-20 object-cover rounded-xl">
+                        <p class="font-semibold text-gray-700">{{ w[1] }}</p>
+                    </div>
+                {% else %}
+                    <p class="text-gray-500">No wishlist items</p>
+                {% endfor %}
+
+            </div>
+
+        </div>
+
     </div>
-
-
-
 
 </div>
 
-
-    </div>
-
-
-
-
-
-
-    
-
-
-<!-- ================= JS ================= -->
 <script>
 function toggleSection(id) {
 
-    // hide all
     document.querySelectorAll(".profile-section").forEach(sec => {
         sec.style.display = "none";
     });
 
-    // show selected
     document.getElementById(id).style.display = "block";
 }
 </script>
-
-
 
 {% endblock %}

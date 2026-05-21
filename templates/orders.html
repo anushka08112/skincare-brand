@@ -2,13 +2,20 @@
 
 {% block content %}
 
+<div class="min-h-screen bg-gray-50 py-10 px-4">
 
+    <div class="max-w-5xl mx-auto">
 
-<div class="orders-page">
+        <h1 class="text-4xl font-bold text-gray-800 mb-10 text-center">
+            Your Orders
+        </h1>
 
-    <h1 class="orders-title">Your Orders</h1>
+        <div 
+            id="orders-container"
+            class="space-y-8"
+        ></div>
 
-    <div id="orders-container" class="orders-container"></div>
+    </div>
 
 </div>
 
@@ -25,7 +32,7 @@ function renderOrders(orders) {
     if (orders.length === 0) {
 
         html = `
-            <div class="empty-orders">
+            <div class="bg-white rounded-3xl shadow-md p-12 text-center text-gray-500 text-xl">
                 No orders yet
             </div>
         `;
@@ -39,30 +46,34 @@ function renderOrders(orders) {
         let statusClass = order.status.replaceAll(" ", "");
 
         html += `
-            <div class="order-card">
+            <div class="bg-white rounded-3xl shadow-lg p-6">
 
-                <div class="order-header">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b pb-5">
 
                     <div>
-                        <div class="order-id">
+
+                        <div class="text-2xl font-bold text-gray-800">
                             Order #${order.order_id}
                         </div>
 
-                        <div class="order-total">
+                        <div class="text-red-600 font-semibold text-lg mt-1">
                             ₹${order.total}
                         </div>
+
                     </div>
 
-                    <div class="status ${statusClass}">
+                    <div class="px-5 py-2 rounded-full text-sm font-semibold bg-red-100 text-red-600 w-fit">
                         ${order.status}
                     </div>
 
                 </div>
 
-                <div class="order-items"
-                     id="items-${order.order_id}">
+                <div 
+                    class="mt-6 space-y-4"
+                    id="items-${order.order_id}"
+                >
 
-                     Loading items...
+                    Loading items...
 
                 </div>
 
@@ -90,19 +101,26 @@ function loadItems(orderId) {
         items.forEach(item => {
 
             html += `
-                <div class="order-item">
+                <div class="flex items-center gap-5 bg-gray-50 rounded-2xl p-4">
 
-                    <img src="/static/images/${item.image}">
+                    <img 
+                        src="/static/images/${item.image}"
+                        class="w-24 h-24 object-cover rounded-2xl shadow"
+                    >
 
-                    <div>
+                    <div class="flex-1">
 
-                        <div class="item-name">
+                        <div class="text-xl font-semibold text-gray-800 mb-2">
                             ${item.name}
                         </div>
 
-                        <p>Quantity: ${item.quantity}</p>
+                        <p class="text-gray-600">
+                            Quantity: ${item.quantity}
+                        </p>
 
-                        <p>Price: ₹${item.price}</p>
+                        <p class="text-red-600 font-semibold mt-1">
+                            Price: ₹${item.price}
+                        </p>
 
                     </div>
 

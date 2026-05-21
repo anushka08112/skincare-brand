@@ -2,98 +2,195 @@
 
 {% block content %}
 
-<div class="form-container">
+<section class="max-w-5xl mx-auto px-4 py-10">
 
-    <h2>Add Product</h2>
+    <div class="bg-white rounded-3xl shadow-xl p-6 sm:p-10">
 
-    <form method="POST" enctype="multipart/form-data">
+        <div class="mb-8">
 
-        <!-- PRODUCT NAME -->
-        <input type="text"
-               name="name"
-               placeholder="Product Name"
-               required>
+            <h2 class="text-3xl sm:text-4xl font-bold text-red-600 mb-3">
+                Add Product
+            </h2>
 
-        <!-- DESCRIPTION -->
-        <textarea name="description"
-                  placeholder="Description"
-                  rows="5"
-                  required></textarea>
-
-        <!-- PRICE -->
-        <input type="number"
-               name="price"
-               placeholder="Price"
-               step="0.01"
-               required>
-
-        <!-- STOCK -->
-        <input type="number"
-               name="stock"
-               placeholder="Stock Quantity"
-               required>
-
-        
-
-        <!-- INGREDIENTS -->
-        <label>Ingredients</label>
-
-        <div class="checkbox-grid">
-
-            {% for ingredient in ingredients %}
-
-                <label>
-
-                    <input type="checkbox"
-                           name="ingredients"
-                           value="{{ ingredient[0] }}">
-
-                    {{ ingredient[1] }}
-
-                </label>
-
-            {% endfor %}
+            <p class="text-gray-600">
+                Add new skincare products to your GlowCare store.
+            </p>
 
         </div>
 
-        <!-- CONCERNS -->
-        <label>Skin Concerns</label>
+        <form method="POST"
+              enctype="multipart/form-data"
+              class="space-y-8">
 
-        <div class="checkbox-grid">
+            <!-- PRODUCT NAME -->
+            <div>
 
-            {% for concern in concerns %}
-
-                <label>
-
-                    <input type="checkbox"
-                           name="concerns"
-                           value="{{ concern[0] }}">
-
-                    {{ concern[1] }}
-
+                <label class="block text-sm font-semibold mb-2 text-gray-700">
+                    Product Name
                 </label>
 
-            {% endfor %}
+                <input
+                    type="text"
+                    name="name"
+                    placeholder="Enter product name"
+                    required
+                    class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500"
+                >
 
-        </div>
+            </div>
 
-        <!-- IMAGE -->
-        <label>Product Image</label>
+            <!-- DESCRIPTION -->
+            <div>
 
-        <input type="file"
-               name="image"
-               accept="image/*"
-               required>
+                <label class="block text-sm font-semibold mb-2 text-gray-700">
+                    Description
+                </label>
 
-        <!-- BUTTON -->
-        <button type="submit">
+                <textarea
+                    name="description"
+                    rows="5"
+                    placeholder="Write product description..."
+                    required
+                    class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500"
+                ></textarea>
 
-            Add Product
+            </div>
 
-        </button>
+            <!-- PRICE + STOCK -->
+            <div class="grid md:grid-cols-2 gap-6">
 
-    </form>
+                <div>
 
-</div>
+                    <label class="block text-sm font-semibold mb-2 text-gray-700">
+                        Price
+                    </label>
+
+                    <input
+                        type="number"
+                        name="price"
+                        placeholder="Enter price"
+                        step="0.01"
+                        required
+                        class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500"
+                    >
+
+                </div>
+
+                <div>
+
+                    <label class="block text-sm font-semibold mb-2 text-gray-700">
+                        Stock Quantity
+                    </label>
+
+                    <input
+                        type="number"
+                        name="stock"
+                        placeholder="Enter stock quantity"
+                        required
+                        class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500"
+                    >
+
+                </div>
+
+            </div>
+
+            <!-- INGREDIENTS -->
+            <div>
+
+                <label class="block text-xl font-bold mb-4 text-gray-800">
+                    Ingredients
+                </label>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+
+                    {% for ingredient in ingredients %}
+
+                    <label class="flex items-center gap-2 bg-gray-100 hover:bg-red-50 border border-gray-200 rounded-xl px-4 py-3 cursor-pointer transition">
+
+                        <input
+                            type="checkbox"
+                            name="ingredients"
+                            value="{{ ingredient[0] }}"
+                            class="w-4 h-4 accent-red-600"
+                        >
+
+                        <span class="text-sm text-gray-700">
+                            {{ ingredient[1] }}
+                        </span>
+
+                    </label>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+            <!-- CONCERNS -->
+            <div>
+
+                <label class="block text-xl font-bold mb-4 text-gray-800">
+                    Skin Concerns
+                </label>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+
+                    {% for concern in concerns %}
+
+                    <label class="flex items-center gap-2 bg-gray-100 hover:bg-red-50 border border-gray-200 rounded-xl px-4 py-3 cursor-pointer transition">
+
+                        <input
+                            type="checkbox"
+                            name="concerns"
+                            value="{{ concern[0] }}"
+                            class="w-4 h-4 accent-red-600"
+                        >
+
+                        <span class="text-sm text-gray-700">
+                            {{ concern[1] }}
+                        </span>
+
+                    </label>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+            <!-- IMAGE -->
+            <div>
+
+                <label class="block text-xl font-bold mb-4 text-gray-800">
+                    Product Image
+                </label>
+
+                <input
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                    required
+                    class="w-full border border-gray-300 rounded-xl bg-white px-4 py-3 file:bg-red-600 file:text-white file:border-none file:px-4 file:py-2 file:rounded-lg file:mr-4 hover:file:bg-red-700"
+                >
+
+            </div>
+
+            <!-- BUTTON -->
+            <div>
+
+                <button
+                    type="submit"
+                    class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg transition"
+                >
+                    Add Product
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
 
 {% endblock %}

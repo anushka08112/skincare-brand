@@ -1,103 +1,166 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="checkout-container">
+<section class="max-w-5xl mx-auto px-4 py-10">
 
-    <h1>Checkout 🧾</h1>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">
+            Checkout 🧾
+        </h1>
+
+        <p class="text-gray-600 mt-2">
+            Confirm your address and review your order.
+        </p>
+    </div>
 
     <!-- COUPON FORM -->
-    <form action="/checkout" method="GET" class="coupon-form">
+    <div class="bg-white rounded-3xl shadow-lg p-6 mb-8">
 
-        <input 
-            type="text"
-            name="coupon"
-            placeholder="Enter Coupon Code"
-        >
-
-        <button type="submit" class="btn">
+        <h2 class="text-xl font-bold text-gray-900 mb-4">
             Apply Coupon
-        </button>
+        </h2>
 
-    </form>
-
-    <!-- MAIN CHECKOUT FORM -->
-    <form action="/place-order" method="POST">
-
-        <!-- ADDRESS -->
-        <h2>Select Address</h2>
-
-        {% for a in addresses %}
-        <div class="address-box">
+        <form action="/checkout" method="GET" class="flex flex-col sm:flex-row gap-4">
 
             <input 
-                type="radio"
-                name="address_id"
-                value="{{ a[0] }}"
-                required
+                type="text"
+                name="coupon"
+                placeholder="Enter Coupon Code"
+                class="flex-1 border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500"
             >
 
-            <p>
-                {{ a[2] }}, {{ a[3] }} - {{ a[4] }}
-            </p>
+            <button 
+                type="submit"
+                class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-semibold shadow"
+            >
+                Apply Coupon
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- MAIN CHECKOUT FORM -->
+    <form action="/place-order" method="POST" class="space-y-8">
+
+        <!-- ADDRESS -->
+        <div class="bg-white rounded-3xl shadow-lg p-6">
+
+            <h2 class="text-2xl font-bold text-gray-900 mb-5">
+                Select Address
+            </h2>
+
+            <div class="space-y-4">
+
+                {% for a in addresses %}
+
+                <label class="flex gap-3 bg-gray-50 hover:bg-red-50 border border-gray-200 rounded-2xl p-4 cursor-pointer">
+
+                    <input 
+                        type="radio"
+                        name="address_id"
+                        value="{{ a[0] }}"
+                        required
+                        class="mt-1 accent-red-600"
+                    >
+
+                    <span class="text-gray-700">
+                        {{ a[2] }}, {{ a[3] }} - {{ a[4] }}
+                    </span>
+
+                </label>
+
+                {% endfor %}
+
+            </div>
+
+            <div class="mt-8">
+
+                <h3 class="text-xl font-bold text-gray-900 mb-4">
+                    Add New Address
+                </h3>
+
+                <div class="grid md:grid-cols-3 gap-4">
+
+                    <input 
+                        type="text"
+                        name="new_address"
+                        placeholder="Full Address"
+                        class="md:col-span-3 border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500"
+                    >
+
+                    <input 
+                        type="text"
+                        name="city"
+                        placeholder="City"
+                        class="border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500"
+                    >
+
+                    <input 
+                        type="text"
+                        name="pincode"
+                        placeholder="Pincode"
+                        class="border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500"
+                    >
+
+                </div>
+
+            </div>
 
         </div>
-        {% endfor %}
-
-        <!-- NEW ADDRESS -->
-        <h3>Add New Address</h3>
-
-        <input 
-            type="text"
-            name="new_address"
-            placeholder="Full Address"
-        >
-
-        <input 
-            type="text"
-            name="city"
-            placeholder="City"
-        >
-
-        <input 
-            type="text"
-            name="pincode"
-            placeholder="Pincode"
-        >
 
         <!-- ORDER SUMMARY -->
-        <h2>Order Summary</h2>
+        <div class="bg-white rounded-3xl shadow-lg p-6">
 
-        {% for item in cart_items %}
-        <div class="checkout-item">
+            <h2 class="text-2xl font-bold text-gray-900 mb-5">
+                Order Summary
+            </h2>
 
-            <p>
-                {{ item[0] }} x {{ item[2] }}
-            </p>
+            <div class="space-y-4 mb-6">
 
-            <span>
-                ₹{{ item[1] * item[2] }}
-            </span>
+                {% for item in cart_items %}
+
+                <div class="flex justify-between gap-4 bg-gray-50 rounded-2xl p-4">
+
+                    <p class="text-gray-700 font-medium">
+                        {{ item[0] }} x {{ item[2] }}
+                    </p>
+
+                    <span class="font-bold text-red-600">
+                        ₹{{ item[1] * item[2] }}
+                    </span>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+            <div class="border-t pt-5 space-y-3">
+
+                <div class="flex justify-between text-gray-600">
+                    <span>Discount</span>
+                    <span>₹{{ discount }}</span>
+                </div>
+
+                <div class="flex justify-between text-2xl font-bold text-gray-900">
+                    <span>Total</span>
+                    <span class="text-red-600">₹{{ total }}</span>
+                </div>
+
+            </div>
+
+            <button 
+                type="submit"
+                class="w-full mt-6 bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg"
+            >
+                Place Order
+            </button>
 
         </div>
-        {% endfor %}
-
-        <!-- DISCOUNT -->
-        <div class="discount-box">
-            Discount: ₹{{ discount }}
-        </div>
-
-        <!-- TOTAL -->
-        <div class="checkout-total">
-            Total: ₹{{ total }}
-        </div>
-
-        <!-- BUTTON -->
-        <button type="submit" class="btn place-order-btn">
-            Place Order
-        </button>
 
     </form>
 
-</div>
+</section>
 
 {% endblock %}

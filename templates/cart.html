@@ -2,28 +2,66 @@
 
 {% block content %}
 
-<div class="cart-page">
+<section class="max-w-6xl mx-auto px-4 py-10">
 
-    <h1 class="cart-title">Your Cart</h1>
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
 
-    <div id="cart-container" class="cart-container"></div>
+        <div>
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">
+                Your Cart
+            </h1>
 
-    <div class="cart-summary">
-        <h2>Total: ₹<span id="total">0</span></h2>
+            <p class="text-gray-600 mt-2">
+                Review your selected skincare products.
+            </p>
+        </div>
 
-        <button class="checkout-btn" onclick="checkout()">
+        <button
+            onclick="checkout()"
+            class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg transition"
+        >
             Proceed to Checkout
         </button>
+
     </div>
 
-</div>
+    <!-- CART ITEMS -->
+    <div id="cart-container"
+         class="space-y-6">
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="mt-8 bg-white rounded-3xl shadow-lg p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+
+        <div>
+            <p class="text-gray-500 text-sm">
+                Cart Total
+            </p>
+
+            <h2 class="text-3xl font-bold text-red-600">
+                ₹<span id="total">0</span>
+            </h2>
+        </div>
+
+        <button
+            onclick="checkout()"
+            class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-2xl font-semibold shadow transition"
+        >
+            Checkout
+        </button>
+
+    </div>
+
+</section>
 
 <script>
 
 function loadCart() {
 
     fetch("/api/cart")
+
     .then(res => res.json())
+
     .then(data => {
 
         let html = "";
@@ -32,12 +70,32 @@ function loadCart() {
         if (data.length === 0) {
 
             document.getElementById("cart-container").innerHTML = `
-                <div class="empty-cart">
-                    Your cart is empty
+
+                <div class="bg-white rounded-3xl shadow-lg p-10 text-center">
+
+                    <div class="text-6xl mb-4">
+                        🛒
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-gray-800 mb-3">
+                        Your cart is empty
+                    </h2>
+
+                    <p class="text-gray-500 mb-6">
+                        Add products to continue shopping.
+                    </p>
+
+                    <a href="/dashboard"
+                       class="inline-block bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-semibold">
+                        Continue Shopping
+                    </a>
+
                 </div>
+
             `;
 
             document.getElementById("total").innerText = 0;
+
             return;
         }
 
@@ -47,45 +105,75 @@ function loadCart() {
 
             html += `
 
-                <div class="cart-card">
+                <div class="bg-white rounded-3xl shadow-lg overflow-hidden">
 
-                    <img 
-                        src="/static/images/${item.image}" 
-                        class="cart-image"
-                    >
+                    <div class="flex flex-col md:flex-row gap-6 p-6">
 
-                    <div class="cart-info">
+                        <!-- IMAGE -->
+                        <div class="w-full md:w-56">
 
-                        <h3>${item.name}</h3>
-
-                        <p class="cart-price">
-                            ₹${item.price}
-                        </p>
-
-                        <div class="qty-box">
-
-                            <button onclick="updateQty(${item.cart_id}, ${item.quantity - 1})">
-                                -
-                            </button>
-
-                            <span>${item.quantity}</span>
-
-                            <button onclick="updateQty(${item.cart_id}, ${item.quantity + 1})">
-                                +
-                            </button>
+                            <img
+                                src="/static/images/${item.image}"
+                                class="w-full h-64 md:h-52 object-cover rounded-2xl bg-gray-100"
+                            >
 
                         </div>
 
-                        <button 
-                            class="remove-btn"
-                            onclick="removeItem(${item.cart_id})"
-                        >
-                            Remove
-                        </button>
+                        <!-- INFO -->
+                        <div class="flex-1 flex flex-col justify-between">
+
+                            <div>
+
+                                <h3 class="text-2xl font-bold text-gray-900 mb-2">
+                                    ${item.name}
+                                </h3>
+
+                                <p class="text-red-600 text-2xl font-bold mb-5">
+                                    ₹${item.price}
+                                </p>
+
+                            </div>
+
+                            <!-- CONTROLS -->
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+
+                                <div class="flex items-center gap-3">
+
+                                    <button
+                                        onclick="updateQty(${item.cart_id}, ${item.quantity - 1})"
+                                        class="w-10 h-10 rounded-xl bg-gray-200 hover:bg-gray-300 text-lg font-bold"
+                                    >
+                                        -
+                                    </button>
+
+                                    <span class="text-lg font-semibold min-w-8 text-center">
+                                        ${item.quantity}
+                                    </span>
+
+                                    <button
+                                        onclick="updateQty(${item.cart_id}, ${item.quantity + 1})"
+                                        class="w-10 h-10 rounded-xl bg-red-600 hover:bg-red-700 text-white text-lg font-bold"
+                                    >
+                                        +
+                                    </button>
+
+                                </div>
+
+                                <button
+                                    onclick="removeItem(${item.cart_id})"
+                                    class="bg-black hover:bg-gray-800 text-white px-5 py-3 rounded-xl font-semibold"
+                                >
+                                    Remove
+                                </button>
+
+                            </div>
+
+                        </div>
 
                     </div>
 
                 </div>
+
             `;
         });
 
@@ -98,6 +186,7 @@ function loadCart() {
 function updateQty(id, qty) {
 
     fetch("/api/cart/update", {
+
         method: "POST",
 
         headers: {
@@ -111,6 +200,7 @@ function updateQty(id, qty) {
     })
 
     .then(() => {
+
         loadCart();
 
         if (typeof loadCartCount === "function") {
@@ -124,9 +214,7 @@ function removeItem(id) {
 }
 
 function checkout() {
-
     window.location.href = "/checkout";
-
 }
 
 loadCart();
