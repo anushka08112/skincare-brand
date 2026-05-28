@@ -18,6 +18,7 @@ app.secret_key = os.getenv("SECRET_KEY", "glowcare_secret_2026")
 from werkzeug.utils import secure_filename
 
 UPLOAD_FOLDER = "static/images"
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 # ---------------- DATABASE CONFIG ----------------
 
@@ -341,67 +342,7 @@ def filter_ingredient(name):
         page=1,
         total_pages=1
     )
-    products = db.session.execute(text("""
-    SELECT
-        p.*,
-        IFNULL(AVG(r.rating), 0) AS avg_rating,
-        COUNT(r.review_id) AS total_reviews
-
-    FROM products p
-
-    JOIN product_concerns pc
-    ON p.product_id = pc.product_id
-
-    JOIN concerns c
-    ON pc.concern_id = c.concern_id
-
-    LEFT JOIN reviews r
-    ON p.product_id = r.product_id
-
-    WHERE c.name = :name
-
-    GROUP BY
-        p.product_id,
-        p.name,
-        p.description,
-        p.price,
-        p.image_url,
-        p.stock
-    """), {
-    "name": name
-}).fetchall()
-
-    concerns = db.session.execute(text("""
-        SELECT * FROM concerns
-    """)).fetchall()
-
-    ingredients = db.session.execute(text("""
-        SELECT * FROM ingredients
-    """)).fetchall()
-
-    wishlist_ids = []
-
-    if "user_id" in session:
-
-        data = db.session.execute(text("""
-            SELECT product_id
-            FROM wishlist
-            WHERE user_id = :uid
-        """), {
-            "uid": session["user_id"]
-        }).fetchall()
-
-        wishlist_ids = [i[0] for i in data]
-
-    return render_template(
-    "dashboard.html",
-    products=products,
-    concerns=concerns,
-    ingredients=ingredients,
-    wishlist_ids=wishlist_ids,
-    page=1,
-    total_pages=1
-)
+    
 
 @app.route("/filter/concern/<path:name>")
 def filter_concern(name):
