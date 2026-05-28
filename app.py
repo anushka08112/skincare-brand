@@ -21,20 +21,23 @@ UPLOAD_FOLDER = "static/images"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 # ---------------- DATABASE CONFIG ----------------
-
 database_url = os.getenv("DATABASE_URL")
 
 if not database_url:
     raise RuntimeError("DATABASE_URL is not set")
 
 if database_url.startswith("mysql://"):
-    database_url = database_url.replace(
-        "mysql://",
-        "mysql+pymysql://",
-        1
-    )
+    database_url = database_url.replace("mysql://", "mysql+pymysql://", 1)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+    "connect_args": {
+        "ssl": {}
+    }
+}
+
+database_url = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = os.getenv("SECRET_KEY", "glowcare_secret_2026")
 # MAIL CONFIG
