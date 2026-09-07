@@ -6,16 +6,19 @@ from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import text
 from flask_mail import Mail, Message
+from werkzeug.utils import secure_filename
 
 # ADMIN IMPORTS
-from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
+try:
+    from flask_admin import Admin
+    from flask_admin.contrib.sqla import ModelView
+except ImportError:
+    Admin = None
+    ModelView = type("ModelView", (), {})
 import os
 # ---------------- APP INIT ----------------
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "glowcare_secret_2026")
-
-from werkzeug.utils import secure_filename
 
 UPLOAD_FOLDER = "static/images"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -61,10 +64,12 @@ class AdminSecure(ModelView):
 
 class User(db.Model):
     __tablename__ = "users"
+
     user_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(255))
+    active = db.Column(db.Integer, default=1)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Product(db.Model):

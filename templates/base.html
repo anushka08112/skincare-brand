@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GlowCare</title>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -23,29 +23,31 @@
 
                 <div class="relative">
                     <button onclick="toggleDropdown('concernMenu')" class="bg-red-700 px-4 py-2 rounded-lg">
-                        Shop by Concern ▾
+                        Shop by Concern <i class="bi bi-caret-down"></i>
                     </button>
 
-                    <div id="concernMenu" class="hidden absolute sm:top-11 left-0 bg-white text-gray-800 rounded-xl shadow-lg min-w-56 overflow-hidden z-50">
+                   <div id="concernMenu" class="hidden absolute sm:top-11 left-0 bg-white text-gray-800 rounded-xl shadow-lg min-w-56 overflow-hidden z-50">
                         {% for c in concerns %}
-                        <a href="{{ url_for('filter_concern', name=c[1]) }}" class="block px-4 py-2 hover:bg-gray-100">
-                            {{ c[1] }}
-                        </a>
+                            <a href="{{ url_for('filter_concern', name=c[1]) }}"
+                            class="block px-4 py-2 hover:bg-gray-100">
+                                {{ c[1] }}
+                            </a>
                         {% endfor %}
-                    </div>
+                </div>
                 </div>
 
                 <div class="relative">
                     <button onclick="toggleDropdown('ingredientMenu')" class="bg-red-700 px-4 py-2 rounded-lg">
-                        Shop by Ingredient ▾
+                        Shop by Ingredient <i class="bi bi-caret-down"></i>
                     </button>
 
                     <div id="ingredientMenu" class="hidden absolute sm:top-11 left-0 bg-white text-gray-800 rounded-xl shadow-lg min-w-56 overflow-hidden z-50">
-                        {% for i in ingredients %}
-                        <a href="{{ url_for('filter_ingredient', name=i[1]) }}" class="block px-4 py-2 hover:bg-gray-100">
-                            {{ i[1] }}
-                        </a>
-                        {% endfor %}
+                            {% for i in ingredients %}
+                                <a href="{{ url_for('filter_ingredient', name=i[1]) }}"
+                                class="block px-4 py-2 hover:bg-gray-100">
+                                    {{ i[1] }}
+                                </a>
+                            {% endfor %}
                     </div>
                 </div>
 
@@ -62,12 +64,12 @@
 
             <div class="grid grid-cols-2 sm:flex gap-2 text-white text-sm">
                 <a class="bg-red-700 px-3 py-2 rounded-lg text-center" href="/about">About</a>
-                <a class="bg-red-700 px-3 py-2 rounded-lg text-center" href="/cart">Cart 🛒 (<span id="cart-count"></span>)</a>
-                <a class="bg-red-700 px-3 py-2 rounded-lg text-center" href="/orders">Orders 📦</a>
-                <a class="bg-red-700 px-3 py-2 rounded-lg text-center" href="/profile">Profile 👤</a>
+                <a class="bg-red-700 px-3 py-2 rounded-lg text-center" href="/cart">Cart <i class="bi bi-cart-dash"></i>(<span id="cart-count"></span>)</a>
+                <a class="bg-red-700 px-3 py-2 rounded-lg text-center" href="/orders">Orders <i class="bi bi-box-seam"></i></a>
+                <a class="bg-red-700 px-3 py-2 rounded-lg text-center" href="/profile">Profile <i class="bi bi-person-circle"></i></a>
 
                 {% if session.get("user_id") == 1 %}
-                <a class="bg-red-800 px-3 py-2 rounded-lg text-center" href="/admin">Admin ⚙️</a>
+                <a class="bg-red-800 px-3 py-2 rounded-lg text-center" href="/admin">Admin <i class="bi bi-gear"></i></a>
                 {% endif %}
             </div>
 
